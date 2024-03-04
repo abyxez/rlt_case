@@ -1,4 +1,5 @@
 import json
+import logging
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Protocol
@@ -8,6 +9,27 @@ from telegram.ext import Application, ContextTypes, MessageHandler
 from telegram.ext.filters import BaseFilter
 
 import business
+
+
+class JsonFilter(BaseFilter):
+    """
+    Фильтр для нахождения JSON-сообщений
+    """
+
+    def __init__(self, expected_keys: list[str]):
+        self.expected_keys = expected_keys
+
+    def filter(self, message):
+        try:
+            data = json.loads(message.text)
+        except ValueError:
+            return False
+
+        if isinstance(data, dict):
+            for key in self.expected_keys:
+                if key not in data:
+                    return False
+            return True
 
 
 @dataclass
@@ -38,6 +60,10 @@ class TelegramBot:
         )
 
     def run(self):
+        logging.basicConfig(
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            level=logging.ERROR,
+        )
         self.application.run_polling(allowed_updates=Update.ALL_TYPES)
 
     async def get_aggregated_data(
@@ -77,24 +103,3 @@ class TelegramBot:
 
         bot_json_response = {"dataset": dataset, "labels": labels}
         return json.dumps(bot_json_response, default=str)
-
-
-class JsonFilter(BaseFilter):
-    """
-    Фильтр для нахождения JSON-сообщений
-    """
-
-    def __init__(self, expected_keys: list[str]):
-        self.expected_keys = expected_keys
-
-    def filter(self, message):
-        try:
-            data = json.loads(message.text)
-        except ValueError:
-            return False
-
-        if isinstance(data, dict):
-            for key in self.expected_keys:
-                if key not in data:
-                    return False
-            return True

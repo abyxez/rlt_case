@@ -1,5 +1,7 @@
 import os
+
 from dotenv import load_dotenv
+
 from database import MongoDB
 from telegram_bot import TelegramBot
 
@@ -25,7 +27,6 @@ def main():
 
     mongo_db = MongoDB(database_name, mongo_uri, collection_name)
     telegram_bot = TelegramBot(bot_token, mongo_db)
-
     telegram_bot.run()
 
 
