@@ -2,6 +2,7 @@
 Этот скрипт выполняет импорт папки dump/ 
 в коллекцию МонгоДБ.
 """
+
 import os
 
 import bson
@@ -16,8 +17,8 @@ collection_name = os.getenv("MONGO_COLLECTION_NAME")
 
 client = MongoClient(mongo_uri)
 
-db = client[database_name]
-collection = db[collection_name]
+db = client[database_name]  # type: ignore
+collection = db[collection_name]  # type: ignore
 
 file_path = "dump/sampleDB/sample_collection.bson"
 

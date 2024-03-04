@@ -58,7 +58,7 @@ pip install -r requirements.txt
 Запустить проект:
 
 ```text
-python3 manage.py runserver
+python3 main.py
 ```
 
 
