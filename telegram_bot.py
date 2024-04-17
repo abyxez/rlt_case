@@ -40,7 +40,9 @@ class ParsedMessage:
 
 
 class DataGetter(Protocol):
-    async def get_data(self, from_: datetime, to: datetime) -> business.Data: ...
+    async def get_data(
+        self, from_: datetime, to: datetime, by: str
+    ) -> business.Data: ...
 
 
 class TelegramBot:
@@ -74,7 +76,9 @@ class TelegramBot:
 
         inp = self.parse_input(update.message.text)
         try:
-            result = await self.data_getter.get_data(inp.dt_from, inp.dt_upto)
+            result = await self.data_getter.get_data(
+                inp.dt_from, inp.dt_upto, by=inp.group_type
+            )
         except Exception as e:
             await update.message.reply_text(
                 f"Не получилось взять данные из MongoDB: {e}"

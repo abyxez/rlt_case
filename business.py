@@ -20,11 +20,11 @@ class Aggregator:
 
     def adjust_date_to_period_start(self, date: datetime) -> datetime:
         if self.by == "year":
-            return datetime(date.year, 1, 1, 1)
+            return datetime(date.year, 0, 0, 0)
         elif self.by == "month":
-            return datetime(date.year, date.month, 1, 1)
+            return datetime(date.year, date.month, 1, 0)
         elif self.by == "day":
-            return datetime(date.year, date.month, date.day, 1)
+            return datetime(date.year, date.month, date.day, 0)
         elif self.by == "hour":
             return datetime(date.year, date.month, date.day, date.hour)
         else:
@@ -32,7 +32,6 @@ class Aggregator:
 
     def aggregate(self, data: Data) -> Data:
         grouped_data = defaultdict(int)
-
         for row in data.rows:
             adjusted_date = self.adjust_date_to_period_start(row.date)
             grouped_data[adjusted_date] += row.price
