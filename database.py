@@ -1,4 +1,3 @@
-from calendar import month
 from datetime import datetime, timedelta
 
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -20,9 +19,10 @@ class MongoDB:
         query = {"dt": {"$gte": from_, "$lte": to}}
         documents = self.collection.find(query)
         delta = self.get_timedelta(by)
+
         lowest_stamp = from_
         highest_stamp = to
-        print(delta)
+
         rows = []
         dates = []
         async for doc in documents:
